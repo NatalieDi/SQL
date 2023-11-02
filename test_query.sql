@@ -152,3 +152,16 @@ name
 SELECT name FROM Passenger 
 GROUP BY name HAVING COUNT(*) > 1;
 
+/*
+Task 14
+Which cities did Bruce Willis visit
+Fields in the resulting table:
+town_to
+*/
+SELECT town_to FROM Trip
+JOIN Pass_in_trip
+ON Trip.id = Pass_in_trip.trip
+JOIN Passenger
+ON Passenger.id = Pass_in_trip.passenger
+AND Passenger.name = 'Bruce Willis'
+ORDER BY town_to;
