@@ -180,3 +180,20 @@ JOIN Passenger
 ON Passenger.id = Pass_in_trip.passenger
 AND Passenger.name = 'Steve Martin'
 ORDER BY time_in;
+
+/*
+Task 16
+Display the list of passengers sorted by the number of flights (in descending order) and name (in ascending order) who have made at least 1 flight.
+Fields in the resulting table:
+name, count
+ Use the "as count" construction for the aggregate function for counting the number of trips. This is necessary for correct verification.
+*/
+
+SELECT name, COUNT(*) as count
+FROM Passenger 
+JOIN Pass_in_trip
+ON Pass_in_trip.passenger = Passenger.id 
+JOIN Trip
+ON Trip.id = Pass_in_trip.trip
+GROUP BY name
+ORDER BY count DESC, name ASC
