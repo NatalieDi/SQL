@@ -165,3 +165,18 @@ JOIN Passenger
 ON Passenger.id = Pass_in_trip.passenger
 AND Passenger.name = 'Bruce Willis'
 ORDER BY town_to;
+
+/*
+Task 15
+Print the date and time of arrival of the passenger Steve Martin to London (London)
+Fields in the resulting table:
+time_in
+*/
+SELECT time_in FROM Trip
+JOIN Pass_in_trip
+ON Trip.id = Pass_in_trip.trip
+AND town_to = 'London'
+JOIN Passenger
+ON Passenger.id = Pass_in_trip.passenger
+AND Passenger.name = 'Steve Martin'
+ORDER BY time_in;
