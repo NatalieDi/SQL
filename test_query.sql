@@ -16,7 +16,7 @@ name
 */
 
 SELECT name
-FROM Company
+FROM Company;
 
 /*
 Task 3
@@ -61,7 +61,8 @@ name
 
 SELECT name
 FROM Company
-	INNER JOIN Trip On Company.id = Trip.company
+
+INNER JOIN Trip On Company.id = Trip.company
 WHERE plane = 'Boeing'
 Group BY name;
 
@@ -140,7 +141,7 @@ Use the "as count" construction for the aggregate passenger count function. This
 
 SELECT trip, COUNT(passenger) As count
 FROM Pass_in_trip
-Group BY trip ;
+GROUP BY trip ;
 
 /*
 Task 13
@@ -159,8 +160,10 @@ Fields in the resulting table:
 town_to
 */
 SELECT town_to FROM Trip
+
 JOIN Pass_in_trip
 ON Trip.id = Pass_in_trip.trip
+
 JOIN Passenger
 ON Passenger.id = Pass_in_trip.passenger
 AND Passenger.name = 'Bruce Willis'
@@ -173,9 +176,11 @@ Fields in the resulting table:
 time_in
 */
 SELECT time_in FROM Trip
+
 JOIN Pass_in_trip
 ON Trip.id = Pass_in_trip.trip
 AND town_to = 'London'
+
 JOIN Passenger
 ON Passenger.id = Pass_in_trip.passenger
 AND Passenger.name = 'Steve Martin'
@@ -191,9 +196,102 @@ name, count
 
 SELECT name, COUNT(*) as count
 FROM Passenger 
+
 JOIN Pass_in_trip
 ON Pass_in_trip.passenger = Passenger.id 
+
 JOIN Trip
 ON Trip.id = Pass_in_trip.trip
 GROUP BY name
-ORDER BY count DESC, name ASC
+ORDER BY count DESC, name ASC;
+
+/*
+Task 17
+Determine how much each family member spent in 2005. 
+In the resulting sample, do not output those family members who have not spent anything.
+Fields in the resulting table:
+member_name
+status
+costs
+Use the "as costs" construct to display the amount spent by a family member. 
+This is necessary for correct verification.
+*/
+
+SELECT fm.member_name, fm.status, sum(p.amount * p.unit_price) as costs
+FROM FamilyMembers fm
+
+JOIN Payments p
+ON p.family_member = fm.member_id
+AND YEAR(p.date)='2005'
+GROUP BY fm.member_name, fm.status;
+
+/*
+Task 18
+Find out who is the oldest in the family
+Fields in the resulting table:
+member_name
+*/
+
+/* Solution 1
+
+SELECT member_name 
+FROM  FamilyMembers
+ORDER BY birthday
+LIMIT 1;
+*/
+
+/* Solution 2*/
+
+SELECT member_name 
+FROM  FamilyMembers
+WHERE birthday = (SELECT MIN(birthday) FROM FamilyMembers);
+
+/*Task 19
+Determine which family member bought potatoes (potato)
+Fields in the resulting table:
+status*/
+
+/* Solution 1
+
+SELECT fm.status 
+FROM  FamilyMembers fm
+JOIN Payments p 
+ON p.family_member = fm.member_id
+JOIN Goods g
+ON g.good_id = p.good
+AND g.good_name = 'potato' 
+GROUP BY fm.status;*/
+
+/* Solution 2*/
+
+SELECT DISTINCT(fm.status) 
+FROM  FamilyMembers fm
+
+JOIN Payments p 
+ON p.family_member = fm.member_id
+
+JOIN Goods g
+ON g.good_id = p.good
+AND g.good_name = 'potato'; 
+
+/*Task 20
+How much and who from the family spent on entertainment. Print family status, name, amount
+Fields in the resulting table:
+status
+member_name
+costs
+Use the "as costs" construct to display the amount spent by a family member. 
+This is necessary for correct verification.*/
+
+SELECT fm.status, fm.member_name, (p.amount * p.unit_price) as costs
+FROM Payments p
+
+JOIN FamilyMembers fm
+ON fm.member_id = p.family_member
+
+JOIN Goods g 
+ON g.good_id = p.good
+
+JOIN GoodTypes gt 
+ON gt.good_type_id = g.type
+AND gt.good_type_name = 'entertainment';
